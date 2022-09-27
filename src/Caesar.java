@@ -1,68 +1,65 @@
 import java.util.*;
 
 public class Caesar {
-        
-    public static void main(Scanner keyboard) {
-        // String plainKey = "a b c d e f g h i j k l m n o p q r s t u v w x y z";
-	    // String plainText[] = plainKey.split(" ");
-	    // String cipherKey = "b c d e f g h i j k l m n o p q r s t u v w x y z a";
-	    // String cipher[] = cipherKey.split(" "); 
-		
-        /* 
-        TODO: expand this code. Create separate file holding all Caesar keys and
-        connect back to this file so that you can choose what Shift to use
-        */ 
 
-		/*
-		TODO: Refactor code to be more readable. Extract the "Acquire Key" loop into a separate method
-		Also consider extracting Encryption/Decryption Initiation into a new method
-		*/
+    static String plainText[];
+	static String cipher[];  
+
+    public static void main(Scanner keyboard) {
 
         System.out.println("Caesar Cipher Encryption");
         System.out.println("Type 'x' to return to the main page");
 
 		// Primary Loop
 		while (true) {
+
 			System.out.println("What shift would you like?");
-			String plainText[];
-			String cipher[];
 
 			// Acquire Key from requested Shift
-			while (true) {
-				String answer = keyboard.nextLine();
-				if(answer.equalsIgnoreCase("x")){
-					return;
-				} else {
-					try {
-						int answerInt = Integer.parseInt(answer);
-						plainText = Ciphers.getCaesarKey(0);
-						cipher = Ciphers.getCaesarKey(answerInt);
-						break;
-					} catch (ArrayIndexOutOfBoundsException e) {
-						System.out.println("Not a valid Shift. Please try again.");
-						continue;
-					}
-				}
-			}
+			setKey(keyboard);
 
 			System.out.println("Would you like to encode or decode?");
 			String answer = keyboard.nextLine();
 			
 			// Initiate Encryption/Decryption
-			if(answer.equalsIgnoreCase("encode")) {
-				encrypt(keyboard, plainText, cipher);
-			} else if(answer.equalsIgnoreCase("decode")) {
-				decrypt(keyboard, plainText, cipher);
-			} else if(answer.equalsIgnoreCase("x")) {
-                return;
-            } else {
-				System.out.println("Invalid Response");
+			while (true) {
+				if(answer.equalsIgnoreCase("encode")) {
+					encrypt(keyboard, plainText, cipher);
+					break;
+				} else if(answer.equalsIgnoreCase("decode")) {
+					decrypt(keyboard, plainText, cipher);
+					break;
+				} else if(answer.equalsIgnoreCase("x")) {
+            	    return;
+            	} else {
+					System.out.println("Invalid Response. Please try again.");
+				}
 			}
 			
 			System.out.println("");
 			System.out.println("");
 		}
     }
+
+	// Finds and sets desired key
+	private static void setKey(Scanner keyboard) {
+		while (true) {
+			String answer = keyboard.nextLine();
+			if(answer.equalsIgnoreCase("x")){
+				return; // TODO: Find way for this return statement to return out of Caesar.main() as well and not just setKey()
+			} else {
+				try {
+					int answerInt = Integer.parseInt(answer);
+					plainText = Ciphers.getCaesarKey(0);
+					cipher = Ciphers.getCaesarKey(answerInt);
+					break;
+				} catch (ArrayIndexOutOfBoundsException|NumberFormatException e) {
+					System.out.println("Not a valid Shift. Please try again.");
+					continue;
+				}
+			}
+		}	
+	}
 
     // Encryption Logic
 	private static void encrypt(Scanner keyboard, String[] plainText, String[] cipher) {
