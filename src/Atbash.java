@@ -1,38 +1,26 @@
 import java.util.*;
 
-public class Caesar {
-
-    static String plainText[];
-	static String cipher[];  
+public class Atbash {
 
     public static void main(Scanner keyboard) {
+        String[] cipher = Ciphers.getAtbashKey();
 
-        System.out.println("Caesar Cipher Encryption");
+        System.out.println("Atbash Cipher Encryption");
         System.out.println("Type 'x' to return to the main page");
 
 		// Primary Loop
 		while (true) {
 
-			System.out.println("What shift would you like?");
-			String answer = keyboard.nextLine();
-
-			// Acquire Key from requested Shift
-			if(answer.equalsIgnoreCase("x")){
-				return;
-			} else {
-				setKey(keyboard, answer);
-			}
-
 			System.out.println("Would you like to encode or decode?");
+			String answer = keyboard.nextLine();
 			
 			// Initiate Encryption/Decryption
 			while (true) {
-				answer = keyboard.nextLine();
 				if(answer.equalsIgnoreCase("encode")) {
-					encrypt(keyboard, plainText, cipher);
+					encrypt(keyboard, cipher);
 					break;
 				} else if(answer.equalsIgnoreCase("decode")) {
-					decrypt(keyboard, plainText, cipher);
+					decrypt(keyboard, cipher);
 					break;
 				} else if(answer.equalsIgnoreCase("x")) {
             	    return;
@@ -46,24 +34,8 @@ public class Caesar {
 		}
     }
 
-	// Finds and sets desired key
-	private static void setKey(Scanner keyboard, String answer) {
-		while (true) {
-			try {
-				int answerInt = Integer.parseInt(answer);
-				plainText = Ciphers.getCaesarKey(0);
-				cipher = Ciphers.getCaesarKey(answerInt);
-				break;
-			} catch (ArrayIndexOutOfBoundsException|NumberFormatException e) {
-				System.out.println("Not a valid Shift. Please try using an integer from 0 to 25");
-				answer = keyboard.nextLine(); // Easy fix but causes only situation where you cannot exit w/ "x". No additional action required
-				continue;
-			}
-		}	
-	}
-
     // Encryption Logic
-	private static void encrypt(Scanner keyboard, String[] plainText, String[] cipher) {
+	private static void encrypt(Scanner keyboard, String[] key) {
 		System.out.println("Plain Text:");
 		String userInput = keyboard.nextLine();
 		String userInputArray[] = userInput.split("");
@@ -74,18 +46,19 @@ public class Caesar {
 		for (int i = 0; i < userInputArray.length; i++) {
 			String letter = userInputArray[i];
 			String newLetter;
-			int position = Main.findIndex(plainText, letter);
+			int position = Main.findIndex(key, letter);
 			if (position == -1) {
 				newLetter = letter;
 			} else {
-				newLetter = cipher[position];
+                position = 25 - position;
+				newLetter = key[position];
 			}
 			System.out.print(newLetter);
 		}
 	}
 	
 	// Decryption Logic
-	private static void decrypt(Scanner keyboard, String[] plainText, String[] cipher) {
+	private static void decrypt(Scanner keyboard, String[] key) {
 		System.out.println("Cipher Text:");
 		String userInput = keyboard.nextLine();
 		String userInputArray[] = userInput.split("");
@@ -96,11 +69,12 @@ public class Caesar {
 		for (int i = 0; i < userInputArray.length; i++) {
 			String letter = userInputArray[i];
 			String newLetter;
-			int position = Main.findIndex(cipher, letter);
+			int position = Main.findIndex(key, letter);
 			if (position == -1) {
 				newLetter = letter;
 			} else {
-				newLetter = plainText[position];
+                position = 25 - position;
+				newLetter = key[position];
 			}
 			System.out.print(newLetter);
 		}
