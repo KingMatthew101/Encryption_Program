@@ -26,6 +26,7 @@ public class Atbash {
             	    return;
             	} else {
 					System.out.println("Invalid Response. Please enter either 'encode' or 'decode'.");
+					break;
 				}
 			}
 			
